@@ -68,12 +68,14 @@ libbaconvideowidget_la_CPPFLAGS = \
 libbaconvideowidget_la_CFLAGS = \
 	$(DEPENDENCY_CFLAGS)		\
 	$(MM_CFLAGS)			\
+	$(RYGEL_CFLAGS) \
 	$(MISSING_PLUGINS_CFLAGS)	\
 	$(AM_CFLAGS)
 
 libbaconvideowidget_la_LIBADD =				\
 	$(top_builddir)/src/gst/libtotemgsthelpers.la	\
 	$(MM_LIBS)					\
+	$(RYGEL_LIBS) \
 	$(GST_LIBS)					\
 	$(EXTRA_BACKEND_LIBS)				\
 	$(X_LIBS)					\

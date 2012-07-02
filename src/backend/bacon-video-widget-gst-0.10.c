@@ -67,6 +67,8 @@
 #include <mx/mx.h>
 #include "totem-aspect-frame.h"
 
+#include <rygel-renderer.h>
+
 /* system */
 #include <unistd.h>
 #include <time.h>
@@ -274,6 +276,8 @@ struct BaconVideoWidgetPrivate
 
   /* for stepping */
   float                        rate;
+
+  RygelPlaybinRenderer        *renderer;
 };
 
 static void bacon_video_widget_set_property (GObject * object,
@@ -2463,6 +2467,11 @@ bacon_video_widget_finalize (GObject * object)
 
   g_type_class_unref (g_type_class_peek (BVW_TYPE_METADATA_TYPE));
   g_type_class_unref (g_type_class_peek (BVW_TYPE_DVD_EVENT));
+
+  if (bvw->priv->renderer) {
+    g_object_unref (bvw->priv->renderer);
+    bvw->priv->renderer = NULL;
+  }
 
   if (bvw->priv->bus) {
     /* make bus drop all messages to make sure none of our callbacks is ever
@@ -6056,6 +6065,10 @@ bacon_video_widget_new (GError ** error)
     g_object_unref (bvw);
     return NULL;
   }
+
+  bvw->priv->renderer = rygel_playbin_renderer_new_wrap (bvw->priv->play, "Totem UPnP Renderer");
+  rygel_playbin_renderer_add_interface (bvw->priv->renderer, "eth0");
+  rygel_playbin_renderer_add_interface (bvw->priv->renderer, "wlan0");
 
   bvw->priv->bus = gst_element_get_bus (bvw->priv->play);
 
